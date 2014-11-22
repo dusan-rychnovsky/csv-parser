@@ -7,15 +7,16 @@
 #
 class CsvFile
 
+  DELIMITER = ","
+  
   # Parses the given CSV file into a collection of rows.
   #
   def initialize file
-    @delimiter = ","
     @rows = []
-    headers = file.gets.chomp.split(@delimiter)
+    headers = file.gets.chomp.split(DELIMITER)
     file.each do |line|
       values = {}
-      headers.zip(line.chomp.split(@delimiter)).each do |key, value|
+      headers.zip(line.chomp.split(DELIMITER)).each do |key, value|
         values[key] = value
       end
       @rows << CsvRow.new(values)
