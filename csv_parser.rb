@@ -10,11 +10,12 @@ class CsvFile
   # Parses the given CSV file into a collection of rows.
   #
   def initialize file
+    @delimiter = ","
     @rows = []
-    headers = file.gets.chomp.split(", ")
+    headers = file.gets.chomp.split(@delimiter)
     file.each do |line|
       values = {}
-      headers.zip(line.chomp.split(", ")).each do |key, value|
+      headers.zip(line.chomp.split(@delimiter)).each do |key, value|
         values[key] = value
       end
       @rows << CsvRow.new(values)
@@ -68,10 +69,10 @@ end
 require 'stringio'
 
 file = StringIO.new(
-"firstname, lastname, age, sex
-Andrej, Beles, 25, male
-Delia, Marin, 20, female
-Henry, Prashanth, 33, male"
+"firstname,lastname,age,sex
+Andrej,Beles,25,male
+Delia,Marin,20,female
+Henry,Prashanth,33,male"
 )
 
 csvFile = CsvFile.new(file)
