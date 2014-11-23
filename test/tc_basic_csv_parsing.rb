@@ -13,7 +13,7 @@ Delia,Marin,20,female
 Henry,Prashanth,33,male"
 	)
 	
-	csvFile = CsvFile.new(file)
+	csvFile = CsvFile.new.parse file
 
 	row = csvFile[0]
 	assert_equal("Andrej", row.firstname)

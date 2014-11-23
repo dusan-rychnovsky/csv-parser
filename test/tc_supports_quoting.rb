@@ -12,7 +12,7 @@ class TestSupportsQuoting < Test::Unit::TestCase
 2000,Mercury,Cougar,'
 	)
 	
-	csvFile = CsvFile.new(file)
+	csvFile = CsvFile.new.parse file
 
 	row = csvFile[0]
 	assert_equal("1997", row.year)
@@ -35,7 +35,7 @@ class TestSupportsQuoting < Test::Unit::TestCase
 2000,Mercury,Cougar,'
 	)
 	
-	csvFile = CsvFile.new(file)
+	csvFile = CsvFile.new.parse file
 
 	row = csvFile[0]
 	assert_equal("1997", row.year)

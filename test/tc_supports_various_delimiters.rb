@@ -12,7 +12,7 @@ class TestSupportsVariousDelimiters < Test::Unit::TestCase
 2000,Mercury,Cougar"
 	)
 	
-	csvFile = CsvFile.new(file)
+	csvFile = CsvFile.new.parse file
 
 	row = csvFile[0]
 	assert_equal("1997", row.year)
@@ -33,7 +33,7 @@ class TestSupportsVariousDelimiters < Test::Unit::TestCase
 2000|Mercury|Cougar"
 	)
 	
-	csvFile = CsvFile.new(file, "|")
+	csvFile = CsvFile.new('|').parse file
 
 	row = csvFile[0]
 	assert_equal("1997", row.year)
@@ -54,7 +54,7 @@ class TestSupportsVariousDelimiters < Test::Unit::TestCase
 2000;Mercury;Cougar"
 	)
 	
-	csvFile = CsvFile.new(file, ";")
+	csvFile = CsvFile.new(';').parse file
 
 	row = csvFile[0]
 	assert_equal("1997", row.year)
@@ -75,7 +75,7 @@ class TestSupportsVariousDelimiters < Test::Unit::TestCase
 2000 Mercury Cougar"
 	)
 	
-	csvFile = CsvFile.new(file, " ")
+	csvFile = CsvFile.new(' ').parse file
 
 	row = csvFile[0]
 	assert_equal("1997", row.year)
@@ -97,7 +97,7 @@ class TestSupportsVariousDelimiters < Test::Unit::TestCase
 2000	Mercury	Cougar"
 	)
 	
-	csvFile = CsvFile.new(file, "	")
+	csvFile = CsvFile.new('	').parse file
 
 	row = csvFile[0]
 	assert_equal("1997", row.year)
@@ -118,6 +118,6 @@ class TestSupportsVariousDelimiters < Test::Unit::TestCase
 2000-Mercury-Cougar"
 	)
 	
-	assert_raise(UnsupportedDelimiterException) { CsvFile.new(file, "-") }
+	assert_raise(UnsupportedDelimiterException) { CsvFile.new '-' }
   end
 end

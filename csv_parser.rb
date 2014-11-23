@@ -17,43 +17,33 @@ end
 # CSV file parser.
 #
 # USAGE:
-# CsvFile.new('data.csv').each { |row| puts row.firstname }
+# CsvFile.new(';').parse('data.csv').each { |row| puts row.firstname }
 #
 class CsvFile
 
   SUPPORTED_DELIMITERS = [ ",", "|", ";", " ", "	"]
   DEFAULT_DELIMITER = ","
   
-  # Parses the given CSV file into a collection of rows.
-  #
-  def initialize file, delimiter = DEFAULT_DELIMITER
-    
+  def initialize delimiter = DEFAULT_DELIMITER
     if not SUPPORTED_DELIMITERS.include? delimiter
       raise UnsupportedDelimiterException.new delimiter
     end
-    line_parser = LineParser.new(Lexer.new delimiter)
-    
-    @rows = []
-    headers = line_parser.parse file.gets.chomp
+    @line_parser = LineParser.new(Lexer.new delimiter)
+  end
+  
+  # Parses the given CSV file into a collection of rows.
+  #
+  def parse file
+    rows = []
+    headers = @line_parser.parse file.gets.chomp
     file.each do |line|
       values = {}
-      headers.zip(line_parser.parse line.chomp).each do |key, value|
+      headers.zip(@line_parser.parse line.chomp).each do |key, value|
         values[key] = value
       end
-      @rows << CsvRow.new(values)
+      rows << CsvRow.new(values)
     end
-  end
-
-  # Iterates over all rows.
-  #
-  def each
-    @rows.each { |row| yield(row) }
-  end
-
-  # Returns the index-th row, or null if no such row exists.
-  #
-  def [] index
-    @rows[index]
+    rows
   end
 end
 
