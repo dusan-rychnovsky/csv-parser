@@ -7,41 +7,47 @@ end
 
 class Lexer
 
-  def initialize stream, delimiter
-    @stream = stream.chars.to_a
+  def initialize delimiter
     @delimiter = delimiter
   end
   
-  def each
-    begin
-      token = next_token
-      yield token
-    end while not token.is_a? EOFToken
+  def tokenize stream
+    stream = stream.chars.to_a
+    tokens = []
+    while true
+      tokens << next_token(stream)
+      if tokens.last.is_a? EOFToken
+        break
+      end
+    end
+    tokens
   end
   
-  def next_token
-    char = @stream.shift
+  private
+  
+  def next_token stream
+    char = stream.shift
     case char    
       when eof
         EOFToken.new
       when delimiter
         DelimiterToken.new delimiter
       when quotes
-        @stream.unshift char
-        get_quoted_identifier
+        stream.unshift char
+        get_quoted_identifier stream
       else
-        @stream.unshift char
-        get_unquoted_identifier
+        stream.unshift char
+        get_unquoted_identifier stream
     end
   end
   
-  def get_unquoted_identifier
+  def get_unquoted_identifier stream
     lexem = ""
     while true do
-      char = @stream.shift
+      char = stream.shift
       case char
         when delimiter
-          @stream.unshift char
+          stream.unshift char
           return IdentifierToken.new lexem
         when eof
           return IdentifierToken.new lexem
@@ -51,19 +57,19 @@ class Lexer
     end
   end
   
-  def get_quoted_identifier
-    char = @stream.shift
+  def get_quoted_identifier stream
+    char = stream.shift
     assert { char == quotes }
     lexem = ""
     while true do
-      char = @stream.shift
+      char = stream.shift
       case char
         when eof
           raise "Unexpected EOF within a quoted string."
         when quotes
-          if @stream.first == quotes
+          if stream.first == quotes
             lexem << quotes
-            @stream.shift
+            stream.shift
            else
              return IdentifierToken.new lexem
            end

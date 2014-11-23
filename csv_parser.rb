@@ -1,5 +1,7 @@
 #!/usr/local/bin/ruby -w
 
+require_relative 'line_parser'
+
 # CSV file parser.
 #
 # USAGE:
@@ -12,11 +14,12 @@ class CsvFile
   # Parses the given CSV file into a collection of rows.
   #
   def initialize file
+    line_parser = LineParser.new(Lexer.new DELIMITER)
     @rows = []
-    headers = file.gets.chomp.split(DELIMITER)
+    headers = line_parser.parse file.gets.chomp
     file.each do |line|
       values = {}
-      headers.zip(line.chomp.split(DELIMITER)).each do |key, value|
+      headers.zip(line_parser.parse line.chomp).each do |key, value|
         values[key] = value
       end
       @rows << CsvRow.new(values)
