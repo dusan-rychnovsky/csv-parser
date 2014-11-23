@@ -2,6 +2,18 @@
 
 require_relative 'line_parser'
 
+class UnsupportedDelimiterException < Exception
+  attr_reader :delimiter
+  
+  def initialize delimiter
+    @delimiter = delimiter
+  end
+  
+  def to_s
+    "Unsupported delimiter [#{@delimiter}]."
+  end
+end
+
 # CSV file parser.
 #
 # USAGE:
@@ -9,12 +21,18 @@ require_relative 'line_parser'
 #
 class CsvFile
 
-  DELIMITER = ","
+  SUPPORTED_DELIMITERS = [ ",", "|", ";", " ", "	"]
+  DEFAULT_DELIMITER = ","
   
   # Parses the given CSV file into a collection of rows.
   #
-  def initialize file
-    line_parser = LineParser.new(Lexer.new DELIMITER)
+  def initialize file, delimiter = DEFAULT_DELIMITER
+    
+    if not SUPPORTED_DELIMITERS.include? delimiter
+      raise UnsupportedDelimiterException.new delimiter
+    end
+    line_parser = LineParser.new(Lexer.new delimiter)
+    
     @rows = []
     headers = line_parser.parse file.gets.chomp
     file.each do |line|
