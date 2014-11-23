@@ -15,15 +15,15 @@ class TestSupportsQuoting < Test::Unit::TestCase
 	csvFile = CsvFile.new(file)
 
 	row = csvFile[0]
-	assert_equal("1997", row.firstname)
-	assert_equal("Ford", row.lastname)
-	assert_equal("E350", row.age)
+	assert_equal("1997", row.year)
+	assert_equal("Ford", row.make)
+	assert_equal("E350", row.model)
 	assert_equal("Super, luxurious truck", row.description)
 
 	row = csvFile[1]
-	assert_equal("2000", row.firstname)
-	assert_equal("Mercury", row.lastname)
-	assert_equal("Cougar", row.age)
+	assert_equal("2000", row.year)
+	assert_equal("Mercury", row.make)
+	assert_equal("Cougar", row.model)
 	assert_equal("", row.description)
   end
   
@@ -38,15 +38,15 @@ class TestSupportsQuoting < Test::Unit::TestCase
 	csvFile = CsvFile.new(file)
 
 	row = csvFile[0]
-	assert_equal("1997", row.firstname)
-	assert_equal("Ford", row.lastname)
-	assert_equal("E350", row.age)
+	assert_equal("1997", row.year)
+	assert_equal("Ford", row.make)
+	assert_equal("E350", row.model)
 	assert_equal("Super, \"luxurious\" truck", row.description)
 
 	row = csvFile[1]
-	assert_equal("2000", row.firstname)
-	assert_equal("Mercury", row.lastname)
-	assert_equal("Cougar", row.age)
+	assert_equal("2000", row.year)
+	assert_equal("Mercury", row.make)
+	assert_equal("Cougar", row.model)
 	assert_equal("", row.description)
   end
 end
