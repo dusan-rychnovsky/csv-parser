@@ -1,11 +1,17 @@
 require_relative 'lexer'
 
+# CSV line parser.
+#
 class LineParser
 
+  # Initializes the parser with the given lexer instance.
+  #
   def initialize lexer
     @lexer = lexer
   end
   
+  # Parses the given CSV line into a collection of values.
+  # 
   def parse line
     values = []
     last_seen_identifier = false

@@ -1,11 +1,20 @@
 require_relative 'assertions'
 
+# CSV line lexical analyzer.
+#
 class Lexer
 
+  # Initialzes the lexer.
+  # 
+  # * *Args*    :
+  #   - +delimiter+ -> The character to be used as delimiter.
+  #
   def initialize delimiter
     @delimiter = delimiter
   end
   
+  # Breaks the given CSV line into a sequence of tokens.
+  #
   def tokenize stream
     stream = stream.chars.to_a
     tokens = []
