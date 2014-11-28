@@ -1,5 +1,41 @@
 require_relative 'assertions'
 
+class LexicalError < RuntimeError
+end
+
+class Token
+end
+
+class EOFToken < Token
+  def to_s
+    "EOF"
+  end
+end
+
+class DelimiterToken < Token
+  attr_reader :lexem
+  
+  def initialize lexem
+    @lexem = lexem
+  end
+  
+  def to_s
+    "DELIMITER(#{@lexem})"
+  end
+end
+
+class IdentifierToken < Token
+  attr_reader :lexem
+  
+  def initialize lexem
+    @lexem = lexem
+  end
+  
+  def to_s
+    "IDENTIFIER(#{@lexem})"
+  end
+end
+
 # CSV line lexical analyzer.
 #
 class Lexer
@@ -69,7 +105,7 @@ class Lexer
       char = stream.shift
       case char
         when eof
-          raise "Unexpected EOF within a quoted string."
+          raise LexicalError, "Unexpected EOF within a quoted string."
         when quotes
           if stream.first == quotes
             lexem << quotes
@@ -93,38 +129,5 @@ class Lexer
   
   def quotes
     '"'
-  end
-end
-
-class Token
-end
-
-class EOFToken < Token
-  def to_s
-    "EOF"
-  end
-end
-
-class DelimiterToken < Token
-  attr_reader :lexem
-  
-  def initialize lexem
-    @lexem = lexem
-  end
-  
-  def to_s
-    "DELIMITER(#{@lexem})"
-  end
-end
-
-class IdentifierToken < Token
-  attr_reader :lexem
-  
-  def initialize lexem
-    @lexem = lexem
-  end
-  
-  def to_s
-    "IDENTIFIER(#{@lexem})"
   end
 end

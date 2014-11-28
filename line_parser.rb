@@ -1,5 +1,8 @@
 require_relative 'lexer'
 
+class ParseError < RuntimeError
+end
+
 # CSV line parser.
 #
 class LineParser
@@ -32,7 +35,7 @@ class LineParser
           end
         when IdentifierToken
           if last_seen_identifier
-            raise "Syntactic error - values must be delimited by commas."
+            raise ParseError, "Unexpected identifier - a delimiter was expected."
           end
           last_seen_identifier = true
           values << token.lexem
