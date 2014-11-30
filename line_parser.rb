@@ -19,7 +19,7 @@ class LineParser
   private
   
   def normalize tokens
-    raise "Missing EOFToken." unless tokens.last == :eof
+    raise "Missing EOFToken." unless tokens.last == :eol
     normalize_rec tokens, 0
   end
   
@@ -28,7 +28,7 @@ class LineParser
       tokens.insert(pos, "")
     end
     
-    if tokens[pos+1] == :eof
+    if tokens[pos+1] == :eol
       return tokens
     end
     

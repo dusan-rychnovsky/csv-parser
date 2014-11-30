@@ -15,12 +15,12 @@ class Lexer
   
   # Breaks the given CSV line into a sequence of tokens.
   #
-  def tokenize stream
-    stream = stream.chars.to_a
+  def tokenize line
+    stream = line.chars.to_a
     tokens = []
     while true
       tokens << next_token(stream)
-      if tokens.last == :eof
+      if tokens.last == :eol
         break
       end
     end
@@ -32,8 +32,8 @@ class Lexer
   def next_token stream
     char = stream.shift
     case char    
-      when eof
-        :eof
+      when eol
+        :eol
       when delimiter
         :delimiter
       when quotes
@@ -53,7 +53,7 @@ class Lexer
         when delimiter
           stream.unshift char
           return lexem
-        when eof
+        when eol
           return lexem
         else
           lexem << char
@@ -68,8 +68,8 @@ class Lexer
     while true do
       char = stream.shift
       case char
-        when eof
-          raise "Unexpected EOF within a quoted string."
+        when eol
+          raise "Unexpected EOL within a quoted string."
         when quotes
           if stream.first == quotes
             lexem << quotes
@@ -83,7 +83,7 @@ class Lexer
     end
   end
   
-  def eof
+  def eol
     nil
   end
   
