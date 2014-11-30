@@ -3,39 +3,6 @@ require_relative 'assertions'
 class LexicalError < RuntimeError
 end
 
-class Token
-end
-
-class EOFToken < Token
-  def to_s
-    "EOF"
-  end
-end
-
-class DelimiterToken < Token
-  attr_reader :lexem
-  
-  def initialize lexem
-    @lexem = lexem
-  end
-  
-  def to_s
-    "DELIMITER(#{@lexem})"
-  end
-end
-
-class IdentifierToken < Token
-  attr_reader :lexem
-  
-  def initialize lexem
-    @lexem = lexem
-  end
-  
-  def to_s
-    "IDENTIFIER(#{@lexem})"
-  end
-end
-
 # CSV line lexical analyzer.
 #
 class Lexer
@@ -56,7 +23,7 @@ class Lexer
     tokens = []
     while true
       tokens << next_token(stream)
-      if tokens.last.is_a? EOFToken
+      if tokens.last == :eof
         break
       end
     end
@@ -69,9 +36,9 @@ class Lexer
     char = stream.shift
     case char    
       when eof
-        EOFToken.new
+        :eof
       when delimiter
-        DelimiterToken.new delimiter
+        :delimiter
       when quotes
         stream.unshift char
         get_quoted_identifier stream
@@ -88,9 +55,9 @@ class Lexer
       case char
         when delimiter
           stream.unshift char
-          return IdentifierToken.new lexem
+          return lexem
         when eof
-          return IdentifierToken.new lexem
+          return lexem
         else
           lexem << char
       end
@@ -111,7 +78,7 @@ class Lexer
             lexem << quotes
             stream.shift
            else
-             return IdentifierToken.new lexem
+             return lexem
            end
         else
           lexem << char
