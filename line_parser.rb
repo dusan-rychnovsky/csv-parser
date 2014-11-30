@@ -16,31 +16,29 @@ class LineParser
   # Parses the given CSV line into a collection of values.
   # 
   def parse line
-    values = []
-    last_seen_identifier = false
-    tokens = @lexer.tokenize line
-    tokens.each do |token|
-      case token
-        when EOFToken
-          if not last_seen_identifier
-            values << ""
-          end
-          break
-        when DelimiterToken
-          if not last_seen_identifier
-            values << ""
-            next
-          else
-            last_seen_identifier = false
-          end
-        when IdentifierToken
-          if last_seen_identifier
-            raise ParseError, "Unexpected identifier - a delimiter was expected."
-          end
-          last_seen_identifier = true
-          values << token.lexem
-      end
+    normalize(@lexer.tokenize(line)).select { |t| t.is_a? IdentifierToken }.map { |t| t.lexem }
+  end
+  
+  private
+  
+  def normalize tokens
+    raise ParseError, "Missing EOFToken." unless tokens.last.is_a? EOFToken
+    normalize_rec tokens, 0
+  end
+  
+  def normalize_rec tokens, pos
+    unless tokens[pos].is_a? IdentifierToken
+      tokens.insert(pos, IdentifierToken.new(""))
     end
-    values
+    
+    if tokens[pos+1].is_a? EOFToken
+      return tokens
+    end
+    
+    if tokens[pos+1].is_a? IdentifierToken
+      raise ParseError, "Unexpected identifier [#{tokens[pos+1]}]- a delimiter was expected."
+    end
+    
+    normalize_rec tokens, (pos + 2)
   end
 end
