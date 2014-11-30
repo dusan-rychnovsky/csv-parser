@@ -1,8 +1,5 @@
 require_relative 'lexer'
 
-class ParseError < RuntimeError
-end
-
 # CSV line parser.
 #
 class LineParser
@@ -22,7 +19,7 @@ class LineParser
   private
   
   def normalize tokens
-    raise ParseError, "Missing EOFToken." unless tokens.last == :eof
+    raise "Missing EOFToken." unless tokens.last == :eof
     normalize_rec tokens, 0
   end
   
@@ -36,7 +33,7 @@ class LineParser
     end
     
     if tokens[pos+1].is_a? String
-      raise ParseError, "Unexpected identifier [#{tokens[pos+1]}]- a delimiter was expected."
+      raise "Unexpected identifier [#{tokens[pos+1]}]- a delimiter was expected."
     end
     
     normalize_rec tokens, (pos + 2)

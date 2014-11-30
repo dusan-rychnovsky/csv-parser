@@ -1,8 +1,5 @@
 require_relative 'assertions'
 
-class LexicalError < RuntimeError
-end
-
 # CSV line lexical analyzer.
 #
 class Lexer
@@ -72,7 +69,7 @@ class Lexer
       char = stream.shift
       case char
         when eof
-          raise LexicalError, "Unexpected EOF within a quoted string."
+          raise "Unexpected EOF within a quoted string."
         when quotes
           if stream.first == quotes
             lexem << quotes
